@@ -31,9 +31,22 @@ void demoInitializerList()
     cout << "  bob.getId() = " << bob.getId() << endl;
 }
 
+void demoDestructor()
+{
+    cout << endl << "=== 4. Destructor ===" << endl;
+    cout << "  arrays on heap before block: " << Student::getArraysOnHeap() << endl;
+    {
+        Student temp(3, "Temp", 1000);
+        cout << "  arrays on heap inside block: " << Student::getArraysOnHeap() << endl;
+    } // temp goes out of scope here, so its destructor runs
+    cout << "  arrays on heap after block:  " << Student::getArraysOnHeap() << endl;
+}
+
 int main()
 {
     demoEncapsulation();
     demoInitializerList();
+    demoDestructor();
+    cout << endl << "arrays still on heap at the end: " << Student::getArraysOnHeap() << endl;
     return 0;
 }

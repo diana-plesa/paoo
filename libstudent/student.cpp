@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+int Student::arraysOnHeap = 0;
+
 // Members are initialized in the initializer list, before the body runs.
 // Assigning them in the body instead would not work for `id`: it is const,
 // so it cannot be assigned, only initialized.
@@ -12,7 +14,18 @@ Student::Student(int id, const string& name, size_t capacity)
       count(0),
       capacity(capacity)
 {
+    arraysOnHeap++;
     cout << "[Student] constructor: " << name << " (id " << id << ")" << endl;
+}
+
+// The destructor runs automatically when a Student is destroyed (for example
+// when it goes out of scope). `grades` was allocated with new[], so it must be
+// released with delete[], otherwise the memory leaks.
+Student::~Student()
+{
+    delete[] grades;
+    arraysOnHeap--;
+    cout << "[Student] destructor: " << name << " (id " << id << "), grades freed" << endl;
 }
 
 int Student::getId() const
@@ -77,4 +90,9 @@ void Student::print() const
         cout << grades[i] << (i + 1 < count ? ", " : "");
     }
     cout << "] average: " << getAverage() << endl;
+}
+
+int Student::getArraysOnHeap()
+{
+    return arraysOnHeap;
 }

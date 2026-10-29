@@ -6,6 +6,7 @@ class Student
 {
 public:
     Student(int id, const std::string& name, std::size_t capacity);
+    ~Student();
 
     int getId() const;
     const std::string& getName() const;
@@ -17,10 +18,15 @@ public:
 
     void print() const;
 
+    // How many grade arrays are currently allocated on the heap (for all students)
+    static int getArraysOnHeap();
+
 private:
     const int id;         // const: can only be set in the initializer list
     std::string name;
     int* grades;          // heap-allocated array
     std::size_t count;    // how many grades are stored
     std::size_t capacity; // size of the allocated array
+
+    static int arraysOnHeap; // shared by all Student objects
 };
