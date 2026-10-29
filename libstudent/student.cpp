@@ -2,13 +2,22 @@
 #include <iostream>
 using namespace std;
 
-Student::Student(const string& name, size_t capacity)
+// Members are initialized in the initializer list, before the body runs.
+// Assigning them in the body instead would not work for `id`: it is const,
+// so it cannot be assigned, only initialized.
+Student::Student(int id, const string& name, size_t capacity)
+    : id(id),
+      name(name),
+      grades(new int[capacity]),
+      count(0),
+      capacity(capacity)
 {
-    this->name = name;
-    this->capacity = capacity;
-    this->count = 0;
-    this->grades = new int[capacity];
-    cout << "[Student] constructor: " << name << endl;
+    cout << "[Student] constructor: " << name << " (id " << id << ")" << endl;
+}
+
+int Student::getId() const
+{
+    return id;
 }
 
 const string& Student::getName() const
@@ -62,7 +71,7 @@ bool Student::addGrade(int grade)
 
 void Student::print() const
 {
-    std::cout << "  " << name << " grades: [";
+    cout << "  #" << id << " " << name << " grades: [";
     for (size_t i = 0; i < count; ++i)
     {
         cout << grades[i] << (i + 1 < count ? ", " : "");

@@ -8,7 +8,7 @@ void demoEncapsulation()
 {
     cout << "=== 2. Encapsulation ===" << endl;
 
-    Student ana("Ana", 3);
+    Student ana(1, "Ana", 3);
     ana.addGrade(9);
     ana.addGrade(42); // invalid value, rejected by addGrade()
     ana.addGrade(10);
@@ -23,8 +23,17 @@ void demoEncapsulation()
     cout << "  first grade via getter: " << ana.getGrade(0) << endl;
 }
 
+void demoInitializerList()
+{
+    cout << endl << "=== 3. Initializer list ===" << endl;
+
+    Student bob(2, "Bob", 2);
+    cout << "  bob.getId() = " << bob.getId() << endl;
+}
+
 int main()
 {
     demoEncapsulation();
+    demoInitializerList();
     return 0;
 }
