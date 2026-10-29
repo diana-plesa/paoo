@@ -6,6 +6,8 @@ class Student
 {
 public:
     Student(int id, const std::string& name, std::size_t capacity);
+    Student(const Student& other);     // copy constructor
+    Student(Student&& other) noexcept; // move constructor
     ~Student();
 
     int getId() const;

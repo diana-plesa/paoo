@@ -15,7 +15,42 @@ Student::Student(int id, const string& name, size_t capacity)
       capacity(capacity)
 {
     arraysOnHeap++;
-    cout << "[Student] constructor: " << name << " (id " << id << ")" << endl;
+    cout << "[Student] constructor: " << name << " (id " << id << "), array at " << grades << endl;
+}
+
+// Copy constructor (deep copy): the new student gets its OWN array and the
+// grades are copied into it. Without this, C++ would only copy the pointer,
+// so both students would share one array and both would free it (double free).
+Student::Student(const Student& other)
+    : id(other.id),
+      name(other.name),
+      grades(new int[other.capacity]),
+      count(other.count),
+      capacity(other.capacity)
+{
+    for (size_t i = 0; i < count; i++)
+    {
+        grades[i] = other.grades[i];
+    }
+    arraysOnHeap++;
+    cout << "[Student] copy constructor: " << name << " (id " << id << "), new array at " << grades << endl;
+}
+
+// Move constructor: used when the source is about to disappear anyway (a
+// temporary, or something passed through std::move). Instead of allocating and
+// copying, the new student takes over the source's array, and the source is
+// left empty (nullptr) so its destructor has nothing to free.
+Student::Student(Student&& other) noexcept
+    : id(other.id),
+      name(move(other.name)),
+      grades(other.grades),
+      count(other.count),
+      capacity(other.capacity)
+{
+    other.grades = nullptr;
+    other.count = 0;
+    other.capacity = 0;
+    cout << "[Student] move constructor: " << name << " (id " << id << "), took array at " << grades << endl;
 }
 
 // The destructor runs automatically when a Student is destroyed (for example
@@ -23,9 +58,14 @@ Student::Student(int id, const string& name, size_t capacity)
 // released with delete[], otherwise the memory leaks.
 Student::~Student()
 {
+    if (grades == nullptr)
+    {
+        cout << "[Student] destructor: id " << id << ", moved-from, nothing to free" << endl;
+        return;
+    }
+    cout << "[Student] destructor: " << name << " (id " << id << "), freeing grades array at " << grades << endl;
     delete[] grades;
     arraysOnHeap--;
-    cout << "[Student] destructor: " << name << " (id " << id << "), grades freed" << endl;
 }
 
 int Student::getId() const
